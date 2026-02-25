@@ -79,8 +79,14 @@ exports.createOrder = async (req, res) => {
     const subtotal = itemsWithDetails.reduce((sum, item) => sum + item.itemTotal, 0);
     const discountAmount = orderData.discount?.percentage ? (subtotal * orderData.discount.percentage / 100) : 0;
     const totalAmount = subtotal - discountAmount;
-    const gst = totalAmount * 0.025;
-    const sgst = totalAmount * 0.025;
+    
+    // Calculate GST (use provided rates or defaults)
+    const sgstRate = orderData.sgstRate || 2.5;
+    const cgstRate = orderData.cgstRate || 2.5;
+    const sgst = totalAmount * (sgstRate / 100);
+    const cgst = totalAmount * (cgstRate / 100);
+    const gst = sgst + cgst;
+    
     const tableNumber = orderData.tableNumber || orderData.tableNo;
     
     // Update table status to occupied
@@ -125,7 +131,13 @@ exports.createOrder = async (req, res) => {
       priority: 'NORMAL',
       discount: orderData.discount || {},
       gst,
-      sgst
+      sgst,
+      cgst,
+      sgstRate,
+      cgstRate,
+      sgstAmount: sgst,
+      cgstAmount: cgst,
+      totalGstAmount: gst
     });
     
     await order.save();
