@@ -82,8 +82,8 @@ exports.createOrder = async (req, res) => {
     const totalAmount = subtotal - discountAmount;
     
     // Calculate GST (use provided rates or defaults)
-    const sgstRate = orderData.sgstRate || 2.5;
-    const cgstRate = orderData.cgstRate || 2.5;
+    const sgstRate = orderData.sgstRate !== undefined && orderData.sgstRate !== null ? orderData.sgstRate : 0;
+    const cgstRate = orderData.cgstRate !== undefined && orderData.cgstRate !== null ? orderData.cgstRate : 0;
     const sgst = totalAmount * (sgstRate / 100);
     const cgst = totalAmount * (cgstRate / 100);
     const gst = sgst + cgst;

@@ -314,13 +314,13 @@ const OrderSchema = new mongoose.Schema(
     },
     sgstRate: {
       type: Number,
-      default: 2.5,
+      default: 0,
       min: 0,
       max: 50
     },
     cgstRate: {
       type: Number,
-      default: 2.5,
+      default: 0,
       min: 0,
       max: 50
     },
